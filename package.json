@@ -1,0 +1,34 @@
+{
+  "name": "loadys",
+  "version": "0.1.1",
+  "description": "A plugin to load static file javascript",
+  "main": "src/index.js",
+  "sideEffects": false,
+  "dependencies": {
+    "core-js": "^2.6.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "core-js": "^2.6.5",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=production -o dist/loadys.min.js --colors && webpack --mode=development --colors",
+    "dev": "webpack --mode=development --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymma/loadys.git"
+  },
+  "keywords": [],
+  "author": "ymma",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ymma/loadys/issues"
+  },
+  "homepage": "https://github.com/ymma/loadys#readme"
+}
