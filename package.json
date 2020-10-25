@@ -12,12 +12,14 @@
     "@babel/preset-env": "^7.3.4",
     "babel-loader": "^8.0.5",
     "core-js": "^2.6.5",
+    "eslint": "^7.12.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production -o dist/loadys.min.js --colors && webpack --mode=development --colors",
+    "lint": "eslint ./src/ --ext js --fix",
     "dev": "webpack --mode=development --colors"
   },
   "repository": {
