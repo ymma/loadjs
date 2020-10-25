@@ -64,8 +64,8 @@ class LoadYS {
         if(!data || !data instanceof Array) return this.onError(`获取制定页数${page}内容${data}错误！`);
         const static_domain = this.static_domain;
         return data.map((k,i) => {
-            k.file = static_domain + k.file;
-            k.preview = static_domain + k.preview;
+            if(k.file.indexOf('http') < 0) k.file = static_domain + k.file;
+            if(k.preview.indexOf('http') < 0) k.preview = static_domain + k.preview;
             return k;
         });
     }
