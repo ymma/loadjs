@@ -1,10 +1,12 @@
 {
   "name": "LoadYS",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "A LoadYS helper",
   "main": "dist/loadys.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run prettier && gulp ",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write ./src/*"
   },
   "keywords": [],
   "author": "ymma",
