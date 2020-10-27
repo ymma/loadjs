@@ -1,7 +1,7 @@
 {
-  "name": "LoadYS",
+  "name": "loadys",
   "version": "0.1.4",
-  "description": "A LoadYS helper",
+  "description": "A loadys helper",
   "main": "dist/loadys.js",
   "scripts": {
     "build": "npm run prettier && gulp ",
