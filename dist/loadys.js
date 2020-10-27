@@ -1,16 +1,115 @@
-/*!
- * Copyright 2020 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-!function(){function t(e,r,n){function i(a,u){if(!r[a]){if(!e[a]){var s="function"==typeof require&&require;if(!u&&s)return s(a,!0);if(o)return o(a,!0);var c=new Error("Cannot find module '"+a+"'");throw c.code="MODULE_NOT_FOUND",c}var f=r[a]={exports:{}};e[a][0].call(f.exports,function(t){var r=e[a][1][t];return i(r||t)},f,f.exports,t,e,r,n)}return r[a].exports}for(var o="function"==typeof require&&require,a=0;a<n.length;a++)i(n[a]);return i}return t}()({1:[function(t,e,r){"use strict";function n(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(r,"__esModule",{value:!0});var i=function(){function t(t,e){for(var r=0;r<e.length;r++){var n=e[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,r,n){return r&&t(e.prototype,r),n&&t(e,n),e}}(),o=function(){function t(e,r,i){var o=i.axios,a=i.domain,u=i.env,s=void 0===u?"prod":u;if(n(this,t),this.product=e,this.module=r,"function"!=typeof o)throw new Error("axios为空，无法创建对象！");this.axios=o,this.onError=function(){},this.domain=a,this.static_domain=a+("test"===s?"test_static":"static"),this.release_domain=a+("test"===s?"test_release":"release"),this.cache={}}return i(t,[{key:"init",value:function(){var t=this;return this._fetch(this.release_domain+"/"+this.product+"/"+this.module+"/index.json").then(function(e){return e&&e.data_list?(t.static_domain=e.static_path,t.last_update_time=e.last_update_time,t.category=e.data_list,!0):t.onError("获取分类错误！")})}},{key:"_fetch",value:function(t){var e=this,r=this.cache[t];return r?Promise.resolve(r):this.axios.get(t).then(function(r){var n=r.status,i=r.data;if(200!==n)throw new Error("获取状态码错误:"+n);return e.cache[t]=i,i})["catch"](function(t){e.onError(t)})}},{key:"getCategory",value:function(t){return t?this.category.find(function(e){return e.name===t}):this.category}},{key:"getList",value:function(t){var e=this,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=r.page,i=void 0===n?1:n,o=this.category.find(function(e){return e.name===t});return o?i>o.paths.length?this.onError("getList:页数无效:"+i):this._fetch(this.release_domain+o.paths[i-1]).then(function(t){if(!(t&&t instanceof Array))return e.onError("获取制定页数"+i+"内容"+t+"错误！");var r=e.static_domain;return t.map(function(t){return t.file.indexOf("http")<0&&(t.file=r+t.file),t.preview.indexOf("http")<0&&(t.preview=r+t.preview),t})}):this.onError("getList:分类中没有:"+t)}}]),t}();r["default"]=o},{}]},{},[1]);
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LoadYS = function () {
+	function LoadYS(product, module, _ref) {
+		var axios = _ref.axios,
+		    domain = _ref.domain,
+		    _ref$env = _ref.env,
+		    env = _ref$env === undefined ? 'prod' : _ref$env;
+
+		_classCallCheck(this, LoadYS);
+
+		this.product = product;
+		this.module = module;
+		if (typeof axios !== 'function') throw new Error('axios为空，无法创建对象！');
+		this.axios = axios;
+
+		this.onError = function () {};
+
+		this.domain = domain;
+		this.static_domain = domain + (env === 'test' ? 'test_static' : 'static');
+		this.release_domain = domain + (env === 'test' ? 'test_release' : 'release');
+		this.cache = {};
+	}
+
+	_createClass(LoadYS, [{
+		key: 'init',
+		value: function init() {
+			var _this = this;
+
+			return this._fetch(this.release_domain + '/' + this.product + '/' + this.module + '/index.json').then(function (indexData) {
+				if (!indexData || !indexData.data_list) return _this.onError('获取分类错误！');
+				_this.static_domain = indexData.static_path;
+				_this.last_update_time = indexData.last_update_time;
+				_this.category = indexData.data_list;
+				return true;
+			});
+		}
+	}, {
+		key: '_fetch',
+		value: function _fetch(url) {
+			var _this2 = this;
+
+			var cache = this.cache[url];
+			if (cache) return Promise.resolve(cache);
+			return this.axios.get(url).then(function (_ref2) {
+				var status = _ref2.status,
+				    data = _ref2.data;
+
+				if (status !== 200) throw new Error('\u83B7\u53D6\u72B6\u6001\u7801\u9519\u8BEF:' + status);
+				_this2.cache[url] = data;
+				return data;
+			}).catch(function (e) {
+				_this2.onError(e);
+			});
+		}
+
+		/**
+   * 得到所有的分类
+   * @return {[type]} [description]
+   */
+
+	}, {
+		key: 'getCategory',
+		value: function getCategory(name) {
+			if (!name) return this.category;
+			return this.category.find(function (k) {
+				return k.name === name;
+			});
+		}
+
+		/**
+   * 得到某个分类的第n页的数据
+   * @param  {[type]} category_name [description]
+   * @param  {[type]} options.page  [description]
+   * @return {[type]}               [description]
+   */
+
+	}, {
+		key: 'getList',
+		value: function getList(name) {
+			var _this3 = this;
+
+			var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+			    _ref3$page = _ref3.page,
+			    page = _ref3$page === undefined ? 1 : _ref3$page;
+
+			var d = this.category.find(function (k) {
+				return k.name === name;
+			});
+			if (!d) return this.onError('getList:分类中没有:' + name);
+			if (page > d.paths.length) return this.onError('getList:页数无效:' + page);
+			return this._fetch(this.release_domain + d.paths[page - 1]).then(function (data) {
+				if (!data || !(data instanceof Array)) return _this3.onError('\u83B7\u53D6\u5236\u5B9A\u9875\u6570' + page + '\u5185\u5BB9' + data + '\u9519\u8BEF\uFF01');
+				var static_domain = _this3.static_domain;
+				return data.map(function (k) {
+					if (k.file.indexOf('http') < 0) k.file = static_domain + k.file;
+					if (k.preview.indexOf('http') < 0) k.preview = static_domain + k.preview;
+					return k;
+				});
+			});
+		}
+	}]);
+
+	return LoadYS;
+}();
+
+exports.default = LoadYS;
