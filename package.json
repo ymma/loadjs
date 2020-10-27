@@ -1,36 +1,35 @@
 {
-  "name": "loadys",
-  "version": "0.1.1",
-  "description": "A plugin to load static file javascript",
-  "main": "src/index.js",
-  "sideEffects": false,
-  "dependencies": {
-    "core-js": "^2.6.11"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.4",
-    "babel-loader": "^8.0.5",
-    "core-js": "^2.6.5",
-    "eslint": "^7.12.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
-  },
+  "name": "LoadYS",
+  "version": "0.1.2",
+  "description": "A LoadYS helper",
+  "main": "dist/loadys.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=production -o dist/loadys.min.js --colors && webpack --mode=development --colors",
-    "lint": "eslint ./src/ --ext js --fix",
-    "dev": "webpack --mode=development --colors"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "ymma",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ymma/loadys.git"
   },
-  "keywords": [],
-  "author": "ymma",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ymma/loadys/issues"
-  },
-  "homepage": "https://github.com/ymma/loadys#readme"
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "del": "^2.1.0",
+    "gulp": "^3.9.0",
+    "gulp-bump": "^1.0.0",
+    "gulp-license": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-shell": "^0.5.1",
+    "gulp-streamify": "^1.0.2",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.7",
+    "jsdoc": "^3.4.0",
+    "run-sequence": "^1.1.5",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.6.1"
+  }
 }

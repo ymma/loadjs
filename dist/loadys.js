@@ -1,0 +1,16 @@
+/*!
+ * Copyright 2020 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+!function(){function t(e,r,n){function i(a,u){if(!r[a]){if(!e[a]){var s="function"==typeof require&&require;if(!u&&s)return s(a,!0);if(o)return o(a,!0);var c=new Error("Cannot find module '"+a+"'");throw c.code="MODULE_NOT_FOUND",c}var f=r[a]={exports:{}};e[a][0].call(f.exports,function(t){var r=e[a][1][t];return i(r||t)},f,f.exports,t,e,r,n)}return r[a].exports}for(var o="function"==typeof require&&require,a=0;a<n.length;a++)i(n[a]);return i}return t}()({1:[function(t,e,r){"use strict";function n(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(r,"__esModule",{value:!0});var i=function(){function t(t,e){for(var r=0;r<e.length;r++){var n=e[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,r,n){return r&&t(e.prototype,r),n&&t(e,n),e}}(),o=function(){function t(e,r,i){var o=i.axios,a=i.domain,u=i.env,s=void 0===u?"prod":u;if(n(this,t),this.product=e,this.module=r,"function"!=typeof o)throw new Error("axios为空，无法创建对象！");this.axios=o,this.onError=function(){},this.domain=a,this.static_domain=a+("test"===s?"test_static":"static"),this.release_domain=a+("test"===s?"test_release":"release"),this.cache={}}return i(t,[{key:"init",value:function(){var t=this;return this._fetch(this.release_domain+"/"+this.product+"/"+this.module+"/index.json").then(function(e){return e&&e.data_list?(t.static_domain=e.static_path,t.last_update_time=e.last_update_time,t.category=e.data_list,!0):t.onError("获取分类错误！")})}},{key:"_fetch",value:function(t){var e=this,r=this.cache[t];return r?Promise.resolve(r):this.axios.get(t).then(function(r){var n=r.status,i=r.data;if(200!==n)throw new Error("获取状态码错误:"+n);return e.cache[t]=i,i})["catch"](function(t){e.onError(t)})}},{key:"getCategory",value:function(t){return t?this.category.find(function(e){return e.name===t}):this.category}},{key:"getList",value:function(t){var e=this,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=r.page,i=void 0===n?1:n,o=this.category.find(function(e){return e.name===t});return o?i>o.paths.length?this.onError("getList:页数无效:"+i):this._fetch(this.release_domain+o.paths[i-1]).then(function(t){if(!(t&&t instanceof Array))return e.onError("获取制定页数"+i+"内容"+t+"错误！");var r=e.static_domain;return t.map(function(t){return t.file.indexOf("http")<0&&(t.file=r+t.file),t.preview.indexOf("http")<0&&(t.preview=r+t.preview),t})}):this.onError("getList:分类中没有:"+t)}}]),t}();r["default"]=o},{}]},{},[1]);
