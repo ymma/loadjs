@@ -50,7 +50,7 @@ var LoadYS = function () {
 	}, {
 		key: 'event',
 		value: function event(type, file_key) {
-			if (!type || !file_key || !this.collect_domain) return;
+			if (!type || !file_key || typeof file_key !== 'string' || file_key.split('.').length !== 4 || !this.collect_domain) return;
 			var url = this.collect_domain + ('/j/collect.gif?p=' + this.product + '&s=' + this.module + '&f=' + file_key + '&t=' + type + '&u=' + encodeURIComponent(window.location.origin) + '&r=' + parseInt(Math.random() * 10000000) + '&d=' + new Date().getTime());
 			var img = new Image();
 			img.onload = function () {

@@ -31,7 +31,14 @@ export default class LoadYS {
 	}
 
 	event(type, file_key) {
-		if (!type || !file_key || !this.collect_domain) return;
+		if (
+			!type ||
+			!file_key ||
+			typeof file_key !== 'string' ||
+			file_key.split('.').length !== 4 ||
+			!this.collect_domain
+		)
+			return;
 		const url =
 			this.collect_domain +
 			`/j/collect.gif?p=${this.product}&s=${
