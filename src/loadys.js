@@ -1,13 +1,12 @@
 'use strict';
 
 export default class LoadYS {
-	constructor(product, module, { axios, fetch, domain, env = 'prod' }) {
+	constructor(product, module, { axios, domain, env = 'prod', collect_domain }) {
 		this.product = product;
 		this.module = module;
-		if (typeof fetch !== 'function' && typeof axios !== 'function')
-			throw new Error('fetch|axios不可均为空，无法创建对象！');
-		this.fetch = fetch;
+		if (typeof axios !== 'function') throw new Error('axios为空，无法创建对象！');
 		this.axios = axios;
+		this.collect_domain = collect_domain;
 
 		this.onError = () => {};
 
@@ -29,24 +28,29 @@ export default class LoadYS {
 		});
 	}
 
+	event(type, file_key) {
+		if (!type || !file_key || !this.collect_domain) return;
+		const url =
+			this.collect_domain +
+			`/j/collect.gif?p=${this.product}&s=${
+				this.module
+			}&f=${file_key}&t=${type}&u=${encodeURIComponent(window.location.origin)}&r=${parseInt(
+				Math.random() * 10000000,
+			)}&d=${new Date().getTime()}`;
+		let img = new Image();
+		img.onload = function () {
+			img = null;
+		};
+		img.src = url;
+	}
+
 	_fetch(url) {
 		const cache = this.cache[url];
 		if (cache) return Promise.resolve(cache);
-		if (this.axios && typeof this.axios.get === 'function') {
-			return this.axios
-				.get(url)
-				.then(({ status, data }) => {
-					if (status !== 200) throw new Error(`获取状态码错误:${status}`);
-					this.cache[url] = data;
-					return data;
-				})
-				.catch(e => {
-					this.onError(e);
-				});
-		}
-		return this.fetch({ url, method: 'get' })
-			.then(data => {
-				if (!data) throw new Error('返回的ysData数据为空！');
+		return this.axios
+			.get(url)
+			.then(({ status, data }) => {
+				if (status !== 200) throw new Error(`获取状态码错误:${status}`);
 				this.cache[url] = data;
 				return data;
 			})

@@ -11,18 +11,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var LoadYS = function () {
 	function LoadYS(product, module, _ref) {
 		var axios = _ref.axios,
-		    fetch = _ref.fetch,
 		    domain = _ref.domain,
 		    _ref$env = _ref.env,
-		    env = _ref$env === undefined ? 'prod' : _ref$env;
+		    env = _ref$env === undefined ? 'prod' : _ref$env,
+		    collect_domain = _ref.collect_domain;
 
 		_classCallCheck(this, LoadYS);
 
 		this.product = product;
 		this.module = module;
-		if (typeof fetch !== 'function' && typeof axios !== 'function') throw new Error('fetch|axios不可均为空，无法创建对象！');
-		this.fetch = fetch;
+		if (typeof axios !== 'function') throw new Error('axios为空，无法创建对象！');
 		this.axios = axios;
+		this.collect_domain = collect_domain;
 
 		this.onError = function () {};
 
@@ -46,26 +46,28 @@ var LoadYS = function () {
 			});
 		}
 	}, {
+		key: 'event',
+		value: function event(type, file_key) {
+			if (!type || !file_key || !this.collect_domain) return;
+			var url = this.collect_domain + ('/j/collect.gif?p=' + this.product + '&s=' + this.module + '&f=' + file_key + '&t=' + type + '&u=' + encodeURIComponent(window.location.origin) + '&r=' + parseInt(Math.random() * 10000000) + '&d=' + new Date().getTime());
+			var img = new Image();
+			img.onload = function () {
+				img = null;
+			};
+			img.src = url;
+		}
+	}, {
 		key: '_fetch',
 		value: function _fetch(url) {
 			var _this2 = this;
 
 			var cache = this.cache[url];
 			if (cache) return Promise.resolve(cache);
-			if (this.axios && typeof this.axios.get === 'function') {
-				return this.axios.get(url).then(function (_ref2) {
-					var status = _ref2.status,
-					    data = _ref2.data;
+			return this.axios.get(url).then(function (_ref2) {
+				var status = _ref2.status,
+				    data = _ref2.data;
 
-					if (status !== 200) throw new Error('\u83B7\u53D6\u72B6\u6001\u7801\u9519\u8BEF:' + status);
-					_this2.cache[url] = data;
-					return data;
-				}).catch(function (e) {
-					_this2.onError(e);
-				});
-			}
-			return this.fetch({ url: url, method: 'get' }).then(function (data) {
-				if (!data) throw new Error('返回的ysData数据为空！');
+				if (status !== 200) throw new Error('\u83B7\u53D6\u72B6\u6001\u7801\u9519\u8BEF:' + status);
 				_this2.cache[url] = data;
 				return data;
 			}).catch(function (e) {
