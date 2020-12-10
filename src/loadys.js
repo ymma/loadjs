@@ -25,7 +25,17 @@ export default class LoadYS {
 			if (!indexData || !indexData.data_list) return this.onError('获取分类错误！');
 			this.static_domain = indexData.static_path;
 			this.last_update_time = indexData.last_update_time;
-			this.category = indexData.data_list;
+			this.category = indexData.data_list.map(item => {
+				if (item.preview_list && item.preview_list.length > 0) {
+					item.preview_list = item.preview_list.map(k => {
+						if (k.file.indexOf('http') < 0) k.file = indexData.static_path + k.file;
+						if (k.preview.indexOf('http') < 0)
+							k.preview = indexData.static_path + k.preview;
+						return k;
+					});
+				}
+				return item;
+			});
 			return true;
 		});
 	}

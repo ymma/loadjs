@@ -43,7 +43,16 @@ var LoadYS = function () {
 				if (!indexData || !indexData.data_list) return _this.onError('获取分类错误！');
 				_this.static_domain = indexData.static_path;
 				_this.last_update_time = indexData.last_update_time;
-				_this.category = indexData.data_list;
+				_this.category = indexData.data_list.map(function (item) {
+					if (item.preview_list && item.preview_list.length > 0) {
+						item.preview_list = item.preview_list.map(function (k) {
+							if (k.file.indexOf('http') < 0) k.file = indexData.static_path + k.file;
+							if (k.preview.indexOf('http') < 0) k.preview = indexData.static_path + k.preview;
+							return k;
+						});
+					}
+					return item;
+				});
 				return true;
 			});
 		}
